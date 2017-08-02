@@ -48,6 +48,8 @@ defmodule Oceanex.Client do
 
   defp response({:ok, %HTTPoison.Response{body: nil} = resp}),
     do: {:ok, %{body: nil, headers: resp.headers, status: resp.status_code}}
+  defp response({:ok, %HTTPoison.Response{body: ""} = resp}),
+    do: {:ok, %{body: nil, headers: resp.headers, status: resp.status_code}}
   defp response({:ok, resp}) do
     {:ok, %{body: Poison.decode!(resp.body, keys:
       Application.get_env(:oceanex, :decoder)),
