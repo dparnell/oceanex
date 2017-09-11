@@ -43,7 +43,7 @@ defmodule Oceanex.Client do
       _ -> Poison.encode!(opts)
     end
 
-    request(method, gen_endpoint(path), opts, headers, []) |> response
+    request(method, gen_endpoint(path), opts, headers, _request_options()) |> response
   end
 
   defp response({:ok, %HTTPoison.Response{body: nil} = resp}),
@@ -62,6 +62,10 @@ defmodule Oceanex.Client do
     %{"Content-Type" => "application/json", "User-Agent" => "oceanex",
       "Authorization" =>
       "Bearer #{Application.get_env(:oceanex, :access_token)}"}
+  end
+
+  defp _request_options() do
+    Application.get_env(:oceanex, :http_client_options, [])
   end
 
   defp gen_endpoint(path),
